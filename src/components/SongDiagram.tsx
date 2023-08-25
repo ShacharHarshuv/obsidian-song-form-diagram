@@ -1,4 +1,17 @@
+import classNames from "classnames";
 import React, { HTMLAttributes } from "react";
+
+const sectionColors = [
+	"bg-red-500",
+	"bg-blue-500",
+	"bg-green-500",
+	"bg-yellow-500",
+	"bg-purple-500",
+	"bg-orange-500",
+	"bg-fuchsia-500",
+	"bg-lime-500",
+	"bg-cyan-500",
+];
 
 export type DiagramInput = {
 	sections: {
@@ -16,51 +29,95 @@ export function Bar(attributes: Pick<HTMLAttributes<HTMLDivElement>, "style">) {
 	);
 }
 
-export function Section({ children }: { children: string }) {
+export function Section({
+	children,
+	colorIndex,
+	...attributes
+}: { children: string; colorIndex: number } & Pick<
+	HTMLAttributes<HTMLDivElement>,
+	"style"
+>) {
 	return (
-		<div className="col-span-2 col-start-3 row-start-2 -m-1 flex items-center justify-center rounded-md bg-red-400 bg-opacity-70 p-1 align-middle">
+		<div
+			className={classNames(
+				"text-md row-start-2 -m-1 flex items-center justify-center rounded-md bg-opacity-70 p-1 align-middle font-bold",
+				sectionColors[colorIndex],
+			)}
+			{...attributes}
+		>
 			{children}
 		</div>
 	);
 }
 
 export function SongDiagram({ data }: { data: DiagramInput }) {
-	let numberOfBars = 32;
+	const numberOfBars = 32;
 	const rowLength = 8;
-	const rows: {
+	const bars: {
+		columnNum: number;
+		rowNum: number;
 		barNum: number;
-	}[][] = [];
+	}[] = [];
 
-	let barNum = 1;
-	while (numberOfBars > 0) {
-		const barsInRow = Math.min(numberOfBars, rowLength);
-		numberOfBars -= barsInRow;
-		const row: (typeof rows)[0] = [];
-		for (let i = 0; i < barsInRow; i++) {
-			row.push({
-				barNum: barNum++,
-			});
+	let barIndex = 0;
+	let rowIndex = 0;
+	let colIndex = 0;
+
+	while (barIndex < numberOfBars) {
+		bars.push({
+			barNum: barIndex,
+			rowNum: rowIndex,
+			columnNum: colIndex,
+		});
+
+		barIndex++;
+		colIndex++;
+		if (colIndex >= rowLength) {
+			colIndex = 0;
+			rowIndex++;
 		}
-		rows.push(row);
 	}
-	console.log(rows);
+
+	console.log(bars);
 
 	return (
-		<div className="row-span-1 grid grid-cols-8 grid-rows-1 gap-x-1 gap-y-4">
-			{rows.map((row, rowIndex) =>
-				row.map((bar, indexInRow) => {
-					return (
-						<Bar
-							style={{
-								gridColumnStart: indexInRow + 1,
-								gridRowStart: rowIndex + 1,
-							}}
-						/>
+		<div className="row-span-1 grid grid-cols-8 grid-rows-1 gap-x-1 gap-y-4 p-2">
+			{bars.map((bar, index) => (
+				<Bar
+					style={{
+						gridColumnStart: bar.columnNum + 1,
+						gridRowStart: bar.rowNum + 1,
+					}}
+					key={index}
+				/>
+			))}
+			{data.sections.map(({ label, bars: barRange }, index) => {
+				const [start, end] =
+					typeof barRange === "number"
+						? [barRange, barRange]
+						: barRange.split("-").map(Number);
+
+				if (start > end) {
+					throw new Error(
+						`Received invalid bar range for section "${label}", start (=${start}) must be lowwer than end (=${end})`,
 					);
-				}),
-			)}
-			{data.sections.map((section) => {
-				return <Section>{section.label}</Section>;
+				}
+
+				const startBar = bars[start - 1];
+				const endBar = bars[end - 1];
+				return (
+					<Section
+						colorIndex={index}
+						style={{
+							gridColumnStart: startBar.columnNum + 1,
+							gridColumnEnd: endBar.columnNum + 2,
+							gridRowStart: startBar.rowNum + 1,
+							gridRowEnd: endBar.rowNum + 2,
+						}}
+					>
+						{label}
+					</Section>
+				);
 			})}
 		</div>
 	);

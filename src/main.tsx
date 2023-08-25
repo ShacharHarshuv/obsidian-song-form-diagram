@@ -1,6 +1,7 @@
 import { Plugin } from "obsidian";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
+import { ErrorBoundary } from "react-error-boundary";
 import { SongDiagramParser } from "./components/SongDiagramParser";
 
 export default class SongFormDiagramPlugin extends Plugin {
@@ -11,7 +12,19 @@ export default class SongFormDiagramPlugin extends Plugin {
 				const root = createRoot(el);
 				root.render(
 					<React.StrictMode>
-						<SongDiagramParser source={source} />
+						<ErrorBoundary
+							fallbackRender={({ error, resetErrorBoundary }) => {
+								return (
+									<div role="alert">
+										<pre className="text-red-400">
+											{error.message}
+										</pre>
+									</div>
+								);
+							}}
+						>
+							<SongDiagramParser source={source} />
+						</ErrorBoundary>
 					</React.StrictMode>,
 				);
 			},

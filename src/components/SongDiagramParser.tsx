@@ -18,21 +18,11 @@ import { DiagramInput, SongDiagram } from "./SongDiagram";
 // });
 
 export function SongDiagramParser({ source }: { source: string }) {
-	try {
-		const parsed = parse(source);
+	const parsed = parse(source);
 
-		// if (!validate(parsed)) {
-		//   return <>
-		//     Invalid input: {ajv.errorsText(validate.errors)}
-		//   </>
-		// }
-
-		return (
-			<>
-				<SongDiagram data={parsed as DiagramInput} />
-			</>
-		);
-	} catch (e) {
-		return <>Error: {e.message}</>;
-	}
+	return (
+		<>
+			<SongDiagram data={parsed as DiagramInput} />
+		</>
+	);
 }
