@@ -1,10 +1,7 @@
 import * as React from "react";
-import { parse } from 'yaml';
-import Ajv from 'ajv';
-import {
-  SongDiagram,
-  DiagramInput,
-} from './SongDiagram';
+import { parse } from "yaml";
+import Ajv from "ajv";
+import { SongDiagram, DiagramInput } from "./SongDiagram";
 
 // todo: validate the input
 // const ajv = new Ajv();
@@ -21,25 +18,22 @@ import {
 //   // required: ['sections'],
 // });
 
-export function SongDiagramParser({source}: { source: string }) {
+export function SongDiagramParser({ source }: { source: string }) {
+	try {
+		const parsed = parse(source);
 
-  try {
-    const parsed = parse(source);
+		// if (!validate(parsed)) {
+		//   return <>
+		//     Invalid input: {ajv.errorsText(validate.errors)}
+		//   </>
+		// }
 
-    // if (!validate(parsed)) {
-    //   return <>
-    //     Invalid input: {ajv.errorsText(validate.errors)}
-    //   </>
-    // }
-
-    return <>
-      <SongDiagram data={parsed as DiagramInput}/>
-    </>
-  } catch (e) {
-    return <>
-      Error: {e.message}
-    </>
-  }
-
-
+		return (
+			<>
+				<SongDiagram data={parsed as DiagramInput} />
+			</>
+		);
+	} catch (e) {
+		return <>Error: {e.message}</>;
+	}
 }
