@@ -1,6 +1,7 @@
 import { Plugin } from 'obsidian';
 import { createRoot } from 'react-dom/client';
 import * as React from 'react';
+import { SongDiagramParser } from './components/SongDiagramParser';
 
 export default class SongFormDiagramPlugin extends Plugin {
   async onload() {
@@ -8,7 +9,7 @@ export default class SongFormDiagramPlugin extends Plugin {
       const root = createRoot(el);
       root.render(
         <React.StrictMode>
-          Hello World
+          <SongDiagramParser source={source}/>
         </React.StrictMode>,
       );
     });
