@@ -8,5 +8,5 @@ export type DiagramInput = {
 };
 
 export function SongDiagram({ data }: { data: DiagramInput }) {
-	return <>{JSON.stringify(data, null, 2)}</>;
+	return <div className="text-blue-400">{JSON.stringify(data, null, 2)}</div>;
 }
