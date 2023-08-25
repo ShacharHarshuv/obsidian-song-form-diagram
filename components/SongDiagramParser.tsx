@@ -1,7 +1,6 @@
 import * as React from "react";
 import { parse } from "yaml";
-import Ajv from "ajv";
-import { SongDiagram, DiagramInput } from "./SongDiagram";
+import { DiagramInput, SongDiagram } from "./SongDiagram";
 
 // todo: validate the input
 // const ajv = new Ajv();

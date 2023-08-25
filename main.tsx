@@ -1,6 +1,6 @@
 import { Plugin } from "obsidian";
-import { createRoot } from "react-dom/client";
 import * as React from "react";
+import { createRoot } from "react-dom/client";
 import { SongDiagramParser } from "./components/SongDiagramParser";
 
 export default class SongFormDiagramPlugin extends Plugin {
