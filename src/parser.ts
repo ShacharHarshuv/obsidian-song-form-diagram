@@ -7,15 +7,14 @@ start
   / " "? { return [] }
 
 segments
-  = segments:(segment:segment " " { return segment })+ { return segments.flat() }
+  = segment:segment segments:(" " _segment:segment { return _segment })* { return [segment, ...segments].flat() }
 
 segment
   = barNumber
   / section
 
 section
-  // todo: support naming a section
-  = label:string? " "? "[" " "? bars:barNumber " "? "]" { return [{ type: "section", segments: bars, label }] }
+  = label:string? " "? "[" " "? segments:segments " "? "]" { return [{ type: "section", segments, label }] }
   / label:string " " bars:barNumber { return [{ type: "section", segments: bars, label }] }
 
 barNumber
@@ -32,6 +31,5 @@ integer
 `);
 
 export function parseSource(source: string): DiagramData {
-	// adding a final space to make the grammar simpler
-	return parser.parse(source.replace(/\s+/g, " ") + " ");
+	return parser.parse(source.replace(/\s+/g, " "));
 }

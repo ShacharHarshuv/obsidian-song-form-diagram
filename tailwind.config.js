@@ -5,7 +5,7 @@ const rowStartClasses = generateClasses('row-start', 12);
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./**/*.tsx"],
+  content: ["./**/*.tsx", "./**/*.ts"],
   theme: {
     extend: {},
   },

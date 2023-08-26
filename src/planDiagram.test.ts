@@ -7,6 +7,7 @@ describe("planDiagram", () => {
 		[
 			fillArray(8, { type: "bar" }),
 			{
+				nestingLevel: 0,
 				segments: [
 					{
 						type: "system",
@@ -19,6 +20,7 @@ describe("planDiagram", () => {
 		[
 			fillArray(16, { type: "bar" }),
 			{
+				nestingLevel: 0,
 				segments: fillArray(2, {
 					type: "system",
 					fullRowLength: 8,
@@ -29,6 +31,7 @@ describe("planDiagram", () => {
 		[
 			fillArray(10, { type: "bar" }),
 			{
+				nestingLevel: 0,
 				segments: [
 					{
 						type: "system",
@@ -53,10 +56,12 @@ describe("planDiagram", () => {
 				...fillArray(2, { type: "bar" as const }),
 			],
 			{
+				nestingLevel: 1,
 				segments: [
 					{
 						type: "multi-system-section",
 						label: null,
+						nestingLevel: 0,
 						segments: [
 							{
 								type: "system",
@@ -69,6 +74,75 @@ describe("planDiagram", () => {
 						type: "system",
 						fullRowLength: 8,
 						bars: fillArray(2, {}),
+					},
+				],
+			},
+		],
+		[
+			[
+				{
+					type: "section",
+					label: "Verse",
+					segments: fillArray(8, { type: "bar" }),
+				},
+				{
+					type: "section",
+					label: "Chorus",
+					segments: [
+						{
+							type: "section",
+							label: "A",
+							segments: fillArray(8, { type: "bar" }),
+						},
+						{
+							type: "section",
+							label: "A",
+							segments: fillArray(8, { type: "bar" }),
+						},
+						{
+							type: "section",
+							label: "B",
+							segments: fillArray(8, { type: "bar" }),
+						},
+						{
+							type: "section",
+							label: "A",
+							segments: fillArray(8, { type: "bar" }),
+						},
+					],
+				},
+			],
+			{
+				nestingLevel: 2,
+				segments: [
+					{
+						type: "multi-system-section",
+						label: "Verse",
+						nestingLevel: 1,
+						segments: [
+							{
+								type: "system",
+								fullRowLength: 8,
+								bars: fillArray(8, {}),
+							},
+						],
+					},
+					{
+						type: "multi-system-section",
+						label: "Chorus",
+						nestingLevel: 1,
+						segments: ["A", "A", "B", "A"].map((label) => ({
+							type: "multi-system-section",
+							label,
+							nestingLevel: 0,
+							segments: [
+								{
+									type: "system",
+									fullRowLength: 8,
+									bars: fillArray(8, {}),
+								},
+							],
+						})),
 					},
 				],
 			},
