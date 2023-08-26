@@ -16,6 +16,7 @@ segment
 section
   // todo: support naming a section
   = label:string? " "? "[" " "? bars:barNumber " "? "]" { return [{ type: "section", segments: bars, label }] }
+  / label:string " " bars:barNumber { return [{ type: "section", segments: bars, label }] }
 
 barNumber
   = value:integer { return Array(value).fill({ type: "bar" }); }

@@ -1,10 +1,30 @@
-const namedSections = new Map<string, number>();
+const colors = [
+	"#EF4444",
+	"#0EA5E9",
+	"#4ADE80",
+	"#F59E0B",
+	"#6366F1",
+	"#D946EF",
+	"#FACC15",
+	"#EC4899",
+];
+
+const namedSectionsColors = new Map<string, number>();
 let index = 0;
 
-export function getSectionColor(name: string) {
-	if (!namedSections.has(name)) {
-		namedSections.set(name, index++);
+export function getSectionColor(name?: string | null) {
+	if (!name) {
+		return colors[index++ % colors.length];
 	}
 
-	return namedSections.get(name)!;
+	if (!namedSectionsColors.has(name)) {
+		namedSectionsColors.set(name, index++);
+	}
+
+	return colors[namedSectionsColors.get(name)! % colors.length];
+}
+
+export function resetSectionColors() {
+	namedSectionsColors.clear();
+	index = 0;
 }

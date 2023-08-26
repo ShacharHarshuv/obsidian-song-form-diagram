@@ -39,6 +39,21 @@ describe("parser", () => {
 				},
 			],
 		],
+		[
+			`"Verse" 8 "Chorus" 8`,
+			[
+				{
+					type: "section",
+					label: "Verse",
+					segments: fillArray(8, { type: "bar" }),
+				},
+				{
+					type: "section",
+					label: "Chorus",
+					segments: fillArray(8, { type: "bar" }),
+				},
+			],
+		],
 	];
 
 	test.each(cases)("parseSource(%p) should return %p", (source, expected) => {

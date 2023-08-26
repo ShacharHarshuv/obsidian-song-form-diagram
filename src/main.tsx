@@ -11,21 +11,19 @@ export default class SongFormDiagramPlugin extends Plugin {
 			(source, el, ctx) => {
 				const root = createRoot(el);
 				root.render(
-					<React.StrictMode>
-						<ErrorBoundary
-							fallbackRender={({ error, resetErrorBoundary }) => {
-								return (
-									<div role="alert">
-										<pre className="text-red-400">
-											{error.message}
-										</pre>
-									</div>
-								);
-							}}
-						>
-							<Diagram source={source} />
-						</ErrorBoundary>
-					</React.StrictMode>,
+					<ErrorBoundary
+						fallbackRender={({ error, resetErrorBoundary }) => {
+							return (
+								<div role="alert">
+									<pre className="text-red-400">
+										{error.message}
+									</pre>
+								</div>
+							);
+						}}
+					>
+						<Diagram source={source} />
+					</ErrorBoundary>,
 				);
 			},
 		);

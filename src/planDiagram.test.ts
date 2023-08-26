@@ -47,6 +47,7 @@ describe("planDiagram", () => {
 			[
 				{
 					type: "section",
+					label: null,
 					segments: fillArray(8, { type: "bar" }),
 				},
 				...fillArray(2, { type: "bar" as const }),
@@ -55,6 +56,7 @@ describe("planDiagram", () => {
 				segments: [
 					{
 						type: "multi-system-section",
+						label: null,
 						segments: [
 							{
 								type: "system",
