@@ -28,7 +28,7 @@ export function Diagram({ source }: { source: string }) {
 			)}
 		>
 			{diagramPlan.segments.map((segment, i) => (
-				<Segment key={i} {...segment} />
+				<Segment key={i} {...segment} nested={false} />
 			))}
 		</div>
 	);

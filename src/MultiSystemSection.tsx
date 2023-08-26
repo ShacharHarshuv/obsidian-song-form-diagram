@@ -14,25 +14,36 @@ const horizontalPaddings = [
 	"px-14 -mx-14",
 ];
 
-export function MultiSystemSection(data: MultiSystemSectionPlan) {
+export function MultiSystemSection(
+	data: MultiSystemSectionPlan & {
+		nested: boolean;
+	},
+) {
 	const color = getSectionColor(data.label);
 
 	return (
 		<div className="mb-2 mt-2">
 			{data.label && (
-				<div className="-mt-3 mb-2 text-lg font-bold" style={{ color }}>
+				<div
+					className="-mt-3 mb-2 text-lg font-bold"
+					style={data.nested ? {} : { color }}
+				>
 					{data.label}
 				</div>
 			)}
 			<div
 				className={classNames(
-					"-my-2 flex flex-col gap-4 rounded-xl py-2 shadow-md",
+					"-my-2 flex flex-col gap-4 rounded-xl py-2",
+					{
+						"shadow-md": !data.nested,
+						"border-2": data.nested,
+					},
 					horizontalPaddings[data.nestingLevel],
 				)}
-				style={{ backgroundColor: color }}
+				style={data.nested ? {} : { backgroundColor: color }}
 			>
 				{data.segments.map((segment, i) => (
-					<Segment key={i} {...segment} />
+					<Segment key={i} {...segment} nested />
 				))}
 			</div>
 		</div>
