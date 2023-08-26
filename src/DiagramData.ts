@@ -4,6 +4,7 @@ export type Bar = {
 
 export type Section = {
 	type: "section";
+	label: string | null;
 	segments: Bar[]; // later this should be Segment[] recursively
 };
 

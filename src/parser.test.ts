@@ -1,25 +1,43 @@
 import { DiagramData } from "./DiagramData";
+import { fillArray } from "./fillArray";
 import { parseSource } from "./parser";
 
 describe("parser", () => {
 	const cases: [string, DiagramData][] = [
 		["", []],
-		["8", Array(8).fill({ type: "bar" })],
-		["8 8", Array(16).fill({ type: "bar" })],
+		["8", fillArray(8, { type: "bar" })],
+		["8 8", fillArray(16, { type: "bar" })],
 		[
 			"[8] [8]",
-			Array(2).fill({
+			fillArray(2, {
 				type: "section",
-				segments: Array(8).fill({ type: "bar" }),
+				label: null,
+				segments: fillArray(8, { type: "bar" }),
 			}),
 		],
 		// spaces shouldn't matter
 		[
 			"[ 8 ] [ 8 ]",
-			Array(2).fill({
+			fillArray(2, {
 				type: "section",
-				segments: Array(8).fill({ type: "bar" }),
+				label: null,
+				segments: fillArray(8, { type: "bar" }),
 			}),
+		],
+		[
+			`"Verse" [8] "Chorus" [8]`,
+			[
+				{
+					type: "section",
+					label: "Verse",
+					segments: fillArray(8, { type: "bar" }),
+				},
+				{
+					type: "section",
+					label: "Chorus",
+					segments: fillArray(8, { type: "bar" }),
+				},
+			],
 		],
 	];
 

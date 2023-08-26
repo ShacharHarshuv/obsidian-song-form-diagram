@@ -13,6 +13,7 @@ export type SegmentPlan = SystemPlan | MultiSystemSectionPlan;
 export type MultiSystemSectionPlan = {
 	type: "multi-system-section";
 	segments: SegmentPlan[];
+	label: string | null;
 };
 
 export type DiagramPlan = {
@@ -57,6 +58,7 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 				plannedSegments.push({
 					type: "multi-system-section",
 					segments: planSegments(segmentData.segments),
+					label: segmentData.label,
 				});
 			}
 		}

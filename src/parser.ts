@@ -15,10 +15,16 @@ segment
 
 section
   // todo: support naming a section
-  = "[" " "? bars:barNumber " "? "]" { return [{ type: "section", segments: bars}] }
+  = label:string? " "? "[" " "? bars:barNumber " "? "]" { return [{ type: "section", segments: bars, label }] }
 
 barNumber
   = value:integer { return Array(value).fill({ type: "bar" }); }
+
+string
+  = '"' chars:char+ '"' { return chars.join(""); }
+  
+char
+  = [^"]
 
 integer
   = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
