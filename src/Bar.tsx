@@ -1,10 +1,6 @@
-import React, { HTMLAttributes } from "react";
+import React from "react";
+import { BarPlan } from "./planDiagram";
 
-export function Bar(attributes: Pick<HTMLAttributes<HTMLDivElement>, "style">) {
-	return (
-		<div
-			className="rouded-md h-8 rounded-sm border-2 opacity-50"
-			{...attributes}
-		></div>
-	);
+export function Bar(data: BarPlan) {
+	return <div className="border-2 border-black bg-white opacity-70"></div>;
 }

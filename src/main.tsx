@@ -2,7 +2,7 @@ import { Plugin } from "obsidian";
 import * as React from "react";
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
-import { SongDiagramParser } from "./components/SongDiagramParser";
+import { Diagram } from "./Diagram";
 
 export default class SongFormDiagramPlugin extends Plugin {
 	async onload() {
@@ -23,7 +23,7 @@ export default class SongFormDiagramPlugin extends Plugin {
 								);
 							}}
 						>
-							<SongDiagramParser source={source} />
+							<Diagram source={source} />
 						</ErrorBoundary>
 					</React.StrictMode>,
 				);
