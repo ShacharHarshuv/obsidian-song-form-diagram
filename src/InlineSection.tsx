@@ -11,7 +11,7 @@ export function InlineSection(data: InlineSectionPlan) {
 			}}
 		>
 			<div>{data.label}</div>
-			<div className="h-4 border-l border-r border-t"></div>
+			<div className="h-4 rounded-t-sm border-l border-r border-t"></div>
 		</div>
 	);
 }

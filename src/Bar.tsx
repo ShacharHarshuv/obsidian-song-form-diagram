@@ -8,8 +8,10 @@ export function Bar(
 ) {
 	return (
 		<div
-			className="h-8 border-r-2 border-gray-500 bg-white opacity-70 shadow-md first:rounded-l-md last:rounded-r-md last:border-r-0"
+			className="h-8 border-r-2 border-gray-500 bg-white px-1 opacity-70 shadow-md first:rounded-l-md last:rounded-r-md last:border-r-0"
 			style={data.style}
-		></div>
+		>
+			<div className="text-xs text-gray-300">{data.index + 1}</div>
+		</div>
 	);
 }

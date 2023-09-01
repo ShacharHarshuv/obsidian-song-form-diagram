@@ -14,7 +14,7 @@ describe("planDiagram", () => {
 				{
 					type: "system",
 					fullRowLength: 8,
-					bars: fillArray(8, {}),
+					bars: fillArray(8, (i) => ({ index: i })),
 					inlineSections: [],
 				},
 			],
@@ -24,12 +24,12 @@ describe("planDiagram", () => {
 	test("two systems", () => {
 		testPlanDiagram(fillArray(16, { type: "bar" }), {
 			nestingLevel: 0,
-			segments: fillArray(2, {
+			segments: fillArray(2, (lineIndex) => ({
 				type: "system",
 				fullRowLength: 8,
-				bars: fillArray(8, {}),
+				bars: fillArray(8, (i) => ({ index: lineIndex * 8 + i })),
 				inlineSections: [],
-			}),
+			})),
 		});
 	});
 
@@ -40,13 +40,13 @@ describe("planDiagram", () => {
 				{
 					type: "system",
 					fullRowLength: 8,
-					bars: fillArray(8, {}),
+					bars: fillArray(8, (i) => ({ index: i })),
 					inlineSections: [],
 				},
 				{
 					type: "system",
 					fullRowLength: 8,
-					bars: fillArray(2, {}),
+					bars: fillArray(2, (i) => ({ index: 8 + i })),
 					inlineSections: [],
 				},
 			],
@@ -74,7 +74,7 @@ describe("planDiagram", () => {
 							segments: [
 								{
 									type: "system",
-									bars: fillArray(8, {}),
+									bars: fillArray(8, (i) => ({ index: i })),
 									fullRowLength: 8,
 									inlineSections: [],
 								},
@@ -83,7 +83,7 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(2, {}),
+							bars: fillArray(2, (i) => ({ index: 8 + i })),
 							inlineSections: [],
 						},
 					],
@@ -138,7 +138,7 @@ describe("planDiagram", () => {
 									type: "system",
 									fullRowLength: 8,
 									inlineSections: [],
-									bars: fillArray(8, {}),
+									bars: fillArray(8, (i) => ({ index: i })),
 								},
 							],
 						},
@@ -146,19 +146,23 @@ describe("planDiagram", () => {
 							type: "multi-system-section",
 							label: "Chorus",
 							nestingLevel: 1,
-							segments: ["A", "A", "B", "A"].map((label) => ({
-								type: "multi-system-section",
-								label,
-								nestingLevel: 0,
-								segments: [
-									{
-										type: "system",
-										fullRowLength: 8,
-										inlineSections: [],
-										bars: fillArray(8, {}),
-									},
-								],
-							})),
+							segments: ["A", "A", "B", "A"].map(
+								(label, lineIndex) => ({
+									type: "multi-system-section",
+									label,
+									nestingLevel: 0,
+									segments: [
+										{
+											type: "system",
+											fullRowLength: 8,
+											inlineSections: [],
+											bars: fillArray(8, (i) => ({
+												index: 8 + lineIndex * 8 + i,
+											})),
+										},
+									],
+								}),
+							),
 						},
 					],
 				},
@@ -202,7 +206,7 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(8, {}),
+							bars: fillArray(8, (i) => ({ index: i })),
 							inlineSections: [
 								{
 									type: "inline-section",
@@ -233,7 +237,7 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(2, {}),
+							bars: fillArray(2, (i) => ({ index: 8 + i })),
 							inlineSections: [
 								{
 									type: "inline-section",

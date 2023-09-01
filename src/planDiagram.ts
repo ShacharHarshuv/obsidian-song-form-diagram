@@ -1,6 +1,8 @@
 import { DiagramData, Section, Segment } from "./DiagramData";
 
-export type BarPlan = {};
+export type BarPlan = {
+	index: number;
+};
 
 export type SystemPlan = {
 	type: "system";
@@ -34,6 +36,7 @@ export type DiagramPlan = {
 
 export function planDiagram(diagramData: DiagramData): DiagramPlan {
 	const barsPerLine = 8; // todo: in the future we can make it configurable
+	let barIndex = 0;
 
 	function planSegments(segments: DiagramData): {
 		segments: SegmentPlan[];
@@ -72,7 +75,9 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 
 				if (segment.type === "bar") {
 					if (currentSystemBars.length < barsPerLine) {
-						currentSystemBars.push({});
+						currentSystemBars.push({
+							index: barIndex++,
+						});
 					}
 				}
 
