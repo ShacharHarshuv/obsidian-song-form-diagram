@@ -33,14 +33,10 @@ export function MultiSystemSection(
 			)}
 			<div
 				className={classNames(
-					"-my-2 flex flex-col gap-4 rounded-xl py-2",
-					{
-						"shadow-md": !data.nested,
-						"border-2": data.nested,
-					},
+					"-my-2 flex flex-col gap-4 rounded-xl border-2 py-2",
 					horizontalPaddings[data.nestingLevel],
 				)}
-				style={data.nested ? {} : { backgroundColor: color }}
+				style={data.nested ? {} : { borderColor: color }}
 			>
 				{data.segments.map((segment, i) => (
 					<Segment key={i} {...segment} nested />
