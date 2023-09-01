@@ -9,9 +9,11 @@ export function System(data: SystemPlan) {
 			{data.inlineSections.map((inlineSection, i) => {
 				return <InlineSection key={i} {...inlineSection} />;
 			})}
-			{data.bars.map((bar, i) => {
-				return <Bar style={{ gridRowStart: 2 }} key={i} {...bar} />;
-			})}
+			<div className="contents">
+				{data.bars.map((bar, i) => {
+					return <Bar style={{ gridRowStart: 2 }} key={i} {...bar} />;
+				})}
+			</div>
 		</div>
 	);
 }
