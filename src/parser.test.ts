@@ -106,6 +106,35 @@ describe("parser", () => {
 				},
 			],
 		],
+		[
+			`1 (left) 1 (:left) 1 (right:) 1 (:center:)`,
+			[
+				{ type: "bar" },
+				{
+					type: "note",
+					text: "left",
+					alignment: "left",
+				},
+				{ type: "bar" },
+				{
+					type: "note",
+					text: "left",
+					alignment: "left",
+				},
+				{ type: "bar" },
+				{
+					type: "note",
+					text: "right",
+					alignment: "right",
+				},
+				{ type: "bar" },
+				{
+					type: "note",
+					text: "center",
+					alignment: "center",
+				},
+			],
+		],
 	];
 
 	test.each(cases)("parseSource(%p) should return %p", (source, expected) => {

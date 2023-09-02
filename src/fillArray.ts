@@ -1,4 +1,4 @@
-export function fillArray<T>(
+export function fillArray<T extends object>(
 	length: number,
 	value: T | ((i: number) => T),
 ): T[] {

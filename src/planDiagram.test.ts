@@ -16,6 +16,7 @@ describe("planDiagram", () => {
 					fullRowLength: 8,
 					bars: fillArray(8, (i) => ({ index: i })),
 					inlineSections: [],
+					bottomNotes: [],
 				},
 			],
 		});
@@ -29,6 +30,7 @@ describe("planDiagram", () => {
 				fullRowLength: 8,
 				bars: fillArray(8, (i) => ({ index: lineIndex * 8 + i })),
 				inlineSections: [],
+				bottomNotes: [],
 			})),
 		});
 	});
@@ -42,12 +44,14 @@ describe("planDiagram", () => {
 					fullRowLength: 8,
 					bars: fillArray(8, (i) => ({ index: i })),
 					inlineSections: [],
+					bottomNotes: [],
 				},
 				{
 					type: "system",
 					fullRowLength: 8,
 					bars: fillArray(2, (i) => ({ index: 8 + i })),
 					inlineSections: [],
+					bottomNotes: [],
 				},
 			],
 		});
@@ -77,6 +81,7 @@ describe("planDiagram", () => {
 									bars: fillArray(8, (i) => ({ index: i })),
 									fullRowLength: 8,
 									inlineSections: [],
+									bottomNotes: [],
 								},
 							],
 						},
@@ -85,6 +90,7 @@ describe("planDiagram", () => {
 							fullRowLength: 8,
 							bars: fillArray(2, (i) => ({ index: 8 + i })),
 							inlineSections: [],
+							bottomNotes: [],
 						},
 					],
 				},
@@ -139,6 +145,7 @@ describe("planDiagram", () => {
 									fullRowLength: 8,
 									inlineSections: [],
 									bars: fillArray(8, (i) => ({ index: i })),
+									bottomNotes: [],
 								},
 							],
 						},
@@ -159,6 +166,7 @@ describe("planDiagram", () => {
 											bars: fillArray(8, (i) => ({
 												index: 8 + lineIndex * 8 + i,
 											})),
+											bottomNotes: [],
 										},
 									],
 								}),
@@ -207,6 +215,7 @@ describe("planDiagram", () => {
 							type: "system",
 							fullRowLength: 8,
 							bars: fillArray(8, (i) => ({ index: i })),
+							bottomNotes: [],
 							inlineSections: [
 								{
 									type: "inline-section",
@@ -242,6 +251,7 @@ describe("planDiagram", () => {
 							type: "system",
 							fullRowLength: 8,
 							bars: fillArray(2, (i) => ({ index: 8 + i })),
+							bottomNotes: [],
 							inlineSections: [
 								{
 									type: "inline-section",
@@ -284,6 +294,7 @@ describe("planDiagram", () => {
 							type: "system",
 							fullRowLength: 8,
 							bars: fillArray(4, (i) => ({ index: i })),
+							bottomNotes: [],
 							inlineSections: [
 								{
 									type: "inline-section",
@@ -312,5 +323,45 @@ describe("planDiagram", () => {
 				},
 			);
 		});
+	});
+
+	test("bottom notes", () => {
+		testPlanDiagram(
+			[
+				...fillArray(4, { type: "bar" } as const),
+				{
+					type: "note",
+					text: "HC",
+					alignment: "left",
+				},
+				...fillArray(4, { type: "bar" } as const),
+				{
+					type: "note",
+					text: "PAC",
+					alignment: "left",
+				},
+			],
+			{
+				paddingLevel: 0,
+				segments: [
+					{
+						type: "system",
+						fullRowLength: 8,
+						bars: fillArray(8, (i) => ({ index: i })),
+						inlineSections: [],
+						bottomNotes: [
+							{
+								text: "HC",
+								position: 4,
+							},
+							{
+								text: "PAC",
+								position: 8,
+							},
+						],
+					},
+				],
+			},
+		);
 	});
 });

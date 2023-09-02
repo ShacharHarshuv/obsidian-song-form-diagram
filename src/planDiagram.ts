@@ -1,7 +1,11 @@
-import { DiagramData, Section, Segment } from "./DiagramData";
+import { DiagramData, Note, Section, Segment } from "./DiagramData";
 
 export type BarPlan = {
 	index: number;
+};
+
+export type NotePlan = Note & {
+	position: number;
 };
 
 export type SystemPlan = {
@@ -9,6 +13,7 @@ export type SystemPlan = {
 	fullRowLength: number;
 	bars: BarPlan[];
 	inlineSections: InlineSectionPlan[];
+	bottomNotes: NotePlan[];
 };
 
 export type SegmentPlan = SystemPlan | MultiSystemSectionPlan;
@@ -44,25 +49,36 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 		paddingLevel: number;
 	} {
 		const plannedSegments: DiagramPlan["segments"] = [];
-		let currentSystemBars: BarPlan[] = [];
-		let currentSystemInlineSegments: InlineSectionPlan[] = [];
+		// let currentSystemBars: BarPlan[] = [];
+		// let currentSystemInlineSegments: InlineSectionPlan[] = [];
+		// let currentSystemNotes: NotePlan[] = [];
+		let currentSystem: SystemPlan = {
+			type: "system",
+			fullRowLength: barsPerLine,
+			bars: [],
+			inlineSections: [],
+			bottomNotes: [],
+		};
 		let highestNestedMultiSystemSection = -1; // -1 means we didn't find any section
 
 		function pushSystem() {
-			plannedSegments.push({
+			plannedSegments.push(currentSystem);
+			currentSystem = {
 				type: "system",
 				fullRowLength: barsPerLine,
-				bars: currentSystemBars,
-				inlineSections: currentSystemInlineSegments,
-			});
-			currentSystemBars = [];
-			currentSystemInlineSegments = [];
+				bars: [],
+				inlineSections: [],
+				bottomNotes: [],
+			};
 		}
 
 		function countBars(section: Section) {
 			return section.segments.reduce((acc, segment): number => {
 				if (segment.type === "bar") {
 					return acc + 1;
+				}
+				if (segment.type === "note") {
+					return acc;
 				}
 				return acc + countBars(segment);
 			}, 0);
@@ -74,29 +90,40 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 		} {
 			let deepestNestingLevel = 0;
 			for (const segment of segments) {
-				if (currentSystemBars.length >= barsPerLine) {
+				const { type: segmentType } = segment;
+
+				if (segmentType === "note") {
+					currentSystem.bottomNotes.push({
+						...segment,
+						position: currentSystem.bars.length,
+					});
+					continue;
+				}
+
+				if (currentSystem.bars.length >= barsPerLine) {
 					pushSystem();
 				}
 
-				if (segment.type === "bar") {
-					if (currentSystemBars.length < barsPerLine) {
-						currentSystemBars.push({
+				if (segmentType === "bar") {
+					if (currentSystem.bars.length < barsPerLine) {
+						currentSystem.bars.push({
 							index: barIndex++,
 						});
 					}
+					continue;
 				}
 
-				if (segment.type === "section") {
+				if (segmentType === "section") {
 					const sectionLength = countBars(segment);
 
 					const isMultiSystemSection =
-						currentSystemBars.length + sectionLength >
+						currentSystem.bars.length + sectionLength >
 							barsPerLine || sectionLength >= barsPerLine;
 
 					if (isMultiSystemSection) {
 						const plannedSection = planSegments(segment.segments);
 
-						if (currentSystemBars.length > 0) {
+						if (currentSystem.bars.length > 0) {
 							pushSystem();
 						}
 
@@ -119,11 +146,11 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 						const inlineSection: InlineSectionPlan = {
 							type: "inline-section",
 							label: segment.label,
-							start: currentSystemBars.length,
-							end: currentSystemBars.length + sectionLength,
+							start: currentSystem.bars.length,
+							end: currentSystem.bars.length + sectionLength,
 							level: 0,
 						};
-						currentSystemInlineSegments.push(inlineSection);
+						currentSystem.inlineSections.push(inlineSection);
 						const {
 							deepestNestingLevel:
 								deepestNestingLevelForInnerSegments,
@@ -135,7 +162,10 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 							inlineSection.level + 1,
 						);
 					}
+					continue;
 				}
+
+				segmentType satisfies never;
 			}
 
 			return {
@@ -145,7 +175,7 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 
 		processSegments(segments);
 
-		if (currentSystemBars.length > 0) {
+		if (currentSystem.bars.length > 0) {
 			pushSystem();
 		}
 

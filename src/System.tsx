@@ -1,7 +1,14 @@
 import * as React from "react";
 import { Bar } from "./Bar";
+import { Note } from "./DiagramData";
 import { InlineSection } from "./InlineSection";
 import { SystemPlan } from "./planDiagram";
+
+const noteAlignmentToClass: Record<Note["alignment"], string> = {
+	center: "justify-self-center",
+	left: "justify-self-start",
+	right: "justify-self-end",
+};
 
 export function System(data: SystemPlan) {
 	const maxNestedLevel = data.inlineSections.reduce((max, segment) => {
@@ -33,6 +40,18 @@ export function System(data: SystemPlan) {
 					);
 				})}
 			</div>
+			{data.bottomNotes.map(({ text, position, alignment }, i) => (
+				<div
+					key={i}
+					className={noteAlignmentToClass[alignment]}
+					style={{
+						gridColumnStart: position,
+						gridRowStart: maxNestedLevel + 3,
+					}}
+				>
+					{text}
+				</div>
+			))}
 		</div>
 	);
 }

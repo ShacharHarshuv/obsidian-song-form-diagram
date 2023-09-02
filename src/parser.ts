@@ -11,7 +11,11 @@ segments
 
 segment
   = barNumber
+  / note
   / section
+
+note
+ = "(" " "? left:":"? text:[^\\^:)]+ right:":"? " "? ")" { return [{type: "note", text: text.join(""), alignment: right && !left ? "right" : right && left ? "center" : "left"}] }
 
 section
   = label:string? " "? "[" " "? segments:segments " "? "]" { return [{ type: "section", segments, label }] }
