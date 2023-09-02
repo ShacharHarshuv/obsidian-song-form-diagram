@@ -332,13 +332,13 @@ describe("planDiagram", () => {
 				{
 					type: "note",
 					text: "HC",
-					alignment: "left",
+					alignment: "right",
 				},
 				...fillArray(4, { type: "bar" } as const),
 				{
 					type: "note",
 					text: "PAC",
-					alignment: "left",
+					alignment: "right",
 				},
 			],
 			{

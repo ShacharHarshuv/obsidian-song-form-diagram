@@ -112,20 +112,20 @@ describe("parser", () => {
 				{ type: "bar" },
 				{
 					type: "note",
-					text: "left",
-					alignment: "left",
-				},
-				{ type: "bar" },
-				{
-					type: "note",
-					text: "left",
-					alignment: "left",
+					text: "right",
+					alignment: "right",
 				},
 				{ type: "bar" },
 				{
 					type: "note",
 					text: "right",
 					alignment: "right",
+				},
+				{ type: "bar" },
+				{
+					type: "note",
+					text: "left",
+					alignment: "left",
 				},
 				{ type: "bar" },
 				{

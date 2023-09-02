@@ -95,7 +95,9 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 				if (segmentType === "note") {
 					currentSystem.bottomNotes.push({
 						...segment,
-						position: currentSystem.bars.length,
+						position:
+							currentSystem.bars.length +
+							(segment.alignment === "right" ? 1 : 0),
 					});
 					continue;
 				}

@@ -5,9 +5,9 @@ import { InlineSection } from "./InlineSection";
 import { SystemPlan } from "./planDiagram";
 
 const noteAlignmentToClass: Record<Note["alignment"], string> = {
-	center: "justify-self-center",
-	left: "justify-self-start",
-	right: "justify-self-end",
+	center: "justify-self-end relative",
+	right: "justify-self-start",
+	left: "justify-self-end",
 };
 
 export function System(data: SystemPlan) {
@@ -49,7 +49,15 @@ export function System(data: SystemPlan) {
 						gridRowStart: maxNestedLevel + 3,
 					}}
 				>
-					{text}
+					<span
+						className={
+							alignment === "center"
+								? "absolute left-0 -translate-x-1/2 transform"
+								: ""
+						}
+					>
+						{text}
+					</span>
 				</div>
 			))}
 		</div>

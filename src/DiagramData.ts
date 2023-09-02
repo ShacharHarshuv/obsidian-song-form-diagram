@@ -11,7 +11,7 @@ export type Section = {
 export type Note = {
 	type: "note";
 	text: string;
-	alignment: "left" | "right" | "center";
+	alignment: "right" | "left" | "center";
 };
 
 export type Segment = Section | Bar | Note;

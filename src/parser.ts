@@ -15,7 +15,7 @@ segment
   / section
 
 note
- = "(" " "? left:":"? text:[^\\^:)]+ right:":"? " "? ")" { return [{type: "note", text: text.join(""), alignment: right && !left ? "right" : right && left ? "center" : "left"}] }
+ = "(" " "? left:":"? text:[^\\^:)]+ right:":"? " "? ")" { return [{type: "note", text: text.join(""), alignment: right && !left ? "left" : right && left ? "center" : "right"}] }
 
 section
   = label:string? " "? "[" " "? segments:segments " "? "]" { return [{ type: "section", segments, label }] }
