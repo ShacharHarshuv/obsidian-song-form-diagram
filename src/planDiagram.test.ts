@@ -1,4 +1,4 @@
-import { DiagramData } from "./DiagramData";
+import { Bar, DiagramData } from "./DiagramData";
 import { fillArray } from "./fillArray";
 import { DiagramPlan, planDiagram } from "./planDiagram";
 
@@ -8,13 +8,17 @@ describe("planDiagram", () => {
 	}
 
 	test("one system", () => {
-		testPlanDiagram(fillArray(8, { type: "bar" }), {
+		testPlanDiagram(fillArray(8, { type: "bar", content: [] }), {
 			paddingLevel: 0,
 			segments: [
 				{
 					type: "system",
 					fullRowLength: 8,
-					bars: fillArray(8, (i) => ({ index: i })),
+					bars: fillArray(8, (i) => ({
+						type: "bar",
+						content: [],
+						index: i,
+					})),
 					inlineSections: [],
 					bottomNotes: [],
 				},
@@ -23,12 +27,16 @@ describe("planDiagram", () => {
 	});
 
 	test("two systems", () => {
-		testPlanDiagram(fillArray(16, { type: "bar" }), {
+		testPlanDiagram(fillArray(16, { type: "bar", content: [] }), {
 			paddingLevel: 0,
 			segments: fillArray(2, (lineIndex) => ({
 				type: "system",
 				fullRowLength: 8,
-				bars: fillArray(8, (i) => ({ index: lineIndex * 8 + i })),
+				bars: fillArray(8, (i) => ({
+					type: "bar",
+					content: [],
+					index: lineIndex * 8 + i,
+				})),
 				inlineSections: [],
 				bottomNotes: [],
 			})),
@@ -36,20 +44,28 @@ describe("planDiagram", () => {
 	});
 
 	test("two full systems", () => {
-		testPlanDiagram(fillArray(10, { type: "bar" }), {
+		testPlanDiagram(fillArray(10, { type: "bar", content: [] }), {
 			paddingLevel: 0,
 			segments: [
 				{
 					type: "system",
 					fullRowLength: 8,
-					bars: fillArray(8, (i) => ({ index: i })),
+					bars: fillArray(8, (i) => ({
+						type: "bar",
+						content: [],
+						index: i,
+					})),
 					inlineSections: [],
 					bottomNotes: [],
 				},
 				{
 					type: "system",
 					fullRowLength: 8,
-					bars: fillArray(2, (i) => ({ index: 8 + i })),
+					bars: fillArray(2, (i) => ({
+						type: "bar",
+						content: [],
+						index: 8 + i,
+					})),
 					inlineSections: [],
 					bottomNotes: [],
 				},
@@ -64,9 +80,9 @@ describe("planDiagram", () => {
 					{
 						type: "section",
 						label: null,
-						segments: fillArray(8, { type: "bar" }),
+						segments: fillArray(8, { type: "bar", content: [] }),
 					},
-					...fillArray(2, { type: "bar" as const }),
+					...fillArray(2, { type: "bar" as const, content: [] }),
 				],
 				{
 					paddingLevel: 1,
@@ -78,7 +94,11 @@ describe("planDiagram", () => {
 							segments: [
 								{
 									type: "system",
-									bars: fillArray(8, (i) => ({ index: i })),
+									bars: fillArray(8, (i) => ({
+										type: "bar",
+										content: [],
+										index: i,
+									})),
 									fullRowLength: 8,
 									inlineSections: [],
 									bottomNotes: [],
@@ -88,7 +108,11 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(2, (i) => ({ index: 8 + i })),
+							bars: fillArray(2, (i) => ({
+								type: "bar",
+								content: [],
+								index: 8 + i,
+							})),
 							inlineSections: [],
 							bottomNotes: [],
 						},
@@ -103,7 +127,7 @@ describe("planDiagram", () => {
 					{
 						type: "section",
 						label: "Verse",
-						segments: fillArray(8, { type: "bar" }),
+						segments: fillArray(8, { type: "bar", content: [] }),
 					},
 					{
 						type: "section",
@@ -112,22 +136,34 @@ describe("planDiagram", () => {
 							{
 								type: "section",
 								label: "A",
-								segments: fillArray(8, { type: "bar" }),
+								segments: fillArray(8, {
+									type: "bar",
+									content: [],
+								}),
 							},
 							{
 								type: "section",
 								label: "A",
-								segments: fillArray(8, { type: "bar" }),
+								segments: fillArray(8, {
+									type: "bar",
+									content: [],
+								}),
 							},
 							{
 								type: "section",
 								label: "B",
-								segments: fillArray(8, { type: "bar" }),
+								segments: fillArray(8, {
+									type: "bar",
+									content: [],
+								}),
 							},
 							{
 								type: "section",
 								label: "A",
-								segments: fillArray(8, { type: "bar" }),
+								segments: fillArray(8, {
+									type: "bar",
+									content: [],
+								}),
 							},
 						],
 					},
@@ -144,7 +180,11 @@ describe("planDiagram", () => {
 									type: "system",
 									fullRowLength: 8,
 									inlineSections: [],
-									bars: fillArray(8, (i) => ({ index: i })),
+									bars: fillArray(8, (i) => ({
+										type: "bar",
+										content: [],
+										index: i,
+									})),
 									bottomNotes: [],
 								},
 							],
@@ -164,6 +204,8 @@ describe("planDiagram", () => {
 											fullRowLength: 8,
 											inlineSections: [],
 											bars: fillArray(8, (i) => ({
+												type: "bar",
+												content: [],
 												index: 8 + lineIndex * 8 + i,
 											})),
 											bottomNotes: [],
@@ -185,27 +227,27 @@ describe("planDiagram", () => {
 					{
 						type: "section",
 						label: "Basic Idea",
-						segments: fillArray(2, { type: "bar" }),
+						segments: fillArray(2, { type: "bar", content: [] }),
 					},
 					{
 						type: "section",
 						label: "Rep. Basic Idea",
-						segments: fillArray(2, { type: "bar" }),
+						segments: fillArray(2, { type: "bar", content: [] }),
 					},
 					{
 						type: "section",
 						label: "Development",
-						segments: fillArray(2, { type: "bar" }),
+						segments: fillArray(2, { type: "bar", content: [] }),
 					},
 					{
 						type: "section",
 						label: "Cadence",
-						segments: fillArray(2, { type: "bar" }),
+						segments: fillArray(2, { type: "bar", content: [] }),
 					},
 					{
 						type: "section",
 						label: "Cadence Rep.",
-						segments: fillArray(2, { type: "bar" }),
+						segments: fillArray(2, { type: "bar", content: [] }),
 					},
 				],
 				{
@@ -214,7 +256,11 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(8, (i) => ({ index: i })),
+							bars: fillArray(8, (i) => ({
+								type: "bar",
+								content: [],
+								index: i,
+							})),
 							bottomNotes: [],
 							inlineSections: [
 								{
@@ -250,7 +296,11 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(2, (i) => ({ index: 8 + i })),
+							bars: fillArray(2, (i) => ({
+								type: "bar",
+								content: [],
+								index: 8 + i,
+							})),
 							bottomNotes: [],
 							inlineSections: [
 								{
@@ -277,12 +327,18 @@ describe("planDiagram", () => {
 							{
 								type: "section",
 								label: "Basic Idea",
-								segments: fillArray(2, { type: "bar" }),
+								segments: fillArray(2, {
+									type: "bar",
+									content: [],
+								}),
 							},
 							{
 								type: "section",
 								label: "Contrasting Idea",
-								segments: fillArray(2, { type: "bar" }),
+								segments: fillArray(2, {
+									type: "bar",
+									content: [],
+								}),
 							},
 						],
 					},
@@ -293,7 +349,11 @@ describe("planDiagram", () => {
 						{
 							type: "system",
 							fullRowLength: 8,
-							bars: fillArray(4, (i) => ({ index: i })),
+							bars: fillArray(4, (i) => ({
+								type: "bar",
+								content: [],
+								index: i,
+							})),
 							bottomNotes: [],
 							inlineSections: [
 								{
@@ -328,13 +388,13 @@ describe("planDiagram", () => {
 	test("bottom notes", () => {
 		testPlanDiagram(
 			[
-				...fillArray(4, { type: "bar" } as const),
+				...fillArray<Bar>(4, { type: "bar", content: [] }),
 				{
 					type: "note",
 					text: "HC",
 					alignment: "right",
 				},
-				...fillArray(4, { type: "bar" } as const),
+				...fillArray<Bar>(4, { type: "bar", content: [] }),
 				{
 					type: "note",
 					text: "PAC",
@@ -347,7 +407,11 @@ describe("planDiagram", () => {
 					{
 						type: "system",
 						fullRowLength: 8,
-						bars: fillArray(8, (i) => ({ index: i })),
+						bars: fillArray(8, (i) => ({
+							type: "bar",
+							content: [],
+							index: i,
+						})),
 						inlineSections: [],
 						bottomNotes: [
 							{

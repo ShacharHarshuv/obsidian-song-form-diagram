@@ -1,7 +1,12 @@
-import { DiagramData, Note, Section, Segment } from "./DiagramData";
+import { Bar, Chord, DiagramData, Note, Section, Segment } from "./DiagramData";
 
-export type BarPlan = {
+export type BarPlan = Omit<Bar, "content"> & {
 	index: number;
+	content: ChordPlan[];
+};
+
+export type ChordPlan = Chord & {
+	space: number;
 };
 
 export type NotePlan = Note & {
@@ -109,6 +114,22 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 				if (segmentType === "bar") {
 					if (currentSystem.bars.length < barsPerLine) {
 						currentSystem.bars.push({
+							...segment,
+							content: segment.content.reduce(
+								(acc: ChordPlan[], chord) => {
+									if (chord.label === "") {
+										acc[acc.length - 1].space += 1;
+										return acc;
+									}
+
+									acc.push({
+										...chord,
+										space: 1,
+									});
+									return acc;
+								},
+								[],
+							),
 							index: barIndex++,
 						});
 					}

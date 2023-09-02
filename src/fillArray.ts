@@ -1,4 +1,4 @@
-export function fillArray<T extends object>(
+export function fillArray<T extends Record<string, any>>(
 	length: number,
 	value: T | ((i: number) => T),
 ): T[] {

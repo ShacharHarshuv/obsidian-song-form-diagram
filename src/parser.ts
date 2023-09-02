@@ -10,7 +10,7 @@ segments
   = segment:segment segments:(" " _segment:segment { return _segment })* { return [segment, ...segments].flat() }
 
 segment
-  = barNumber
+  = bars
   / note
   / section
 
@@ -21,8 +21,23 @@ section
   = label:string? " "? "[" " "? segments:segments " "? "]" { return [{ type: "section", segments, label }] }
   / label:string " " bars:barNumber { return [{ type: "section", segments: bars, label }] }
 
+bars
+  = barNumber
+  / bar:bar bars:(" "? "|" " "? _bar:bar {return _bar})+ { return [bar, ...bars] }
+  
+bar
+ = chords:chords { return { type: "bar", content: chords } }
+ / " "* { return { type: "bar", content: [] } }
+ 
+chords
+  = chord:chord chords:(" " _chord:chord { return _chord })* { return [chord, ...chords] }
+  
+chord
+  = "-" {return { type: "chord", label: "" } }
+  / label:[^ |\\[\\]]+ { return { type: "chord", label: label.join("") } }
+
 barNumber
-  = value:integer { return Array(value).fill({ type: "bar" }); }
+  = value:integer { return Array(value).fill({ type: "bar", content: [] }); }
 
 string
   = '"' chars:char+ '"' { return chars.join(""); }

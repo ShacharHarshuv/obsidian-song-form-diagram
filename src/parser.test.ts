@@ -5,15 +5,30 @@ import { parseSource } from "./parser";
 describe("parser", () => {
 	const cases: [string, DiagramData][] = [
 		["", []],
-		["8", fillArray(8, { type: "bar" })],
-		["8 8", fillArray(16, { type: "bar" })],
+		[
+			"8",
+			fillArray(8, {
+				type: "bar",
+				content: [],
+			}),
+		],
+		[
+			"8 8",
+			fillArray(16, {
+				type: "bar",
+				content: [],
+			}),
+		],
 		[
 			"[8]",
 			[
 				{
 					type: "section",
 					label: null,
-					segments: fillArray(8, { type: "bar" }),
+					segments: fillArray(8, {
+						type: "bar",
+						content: [],
+					}),
 				},
 			],
 		],
@@ -22,7 +37,10 @@ describe("parser", () => {
 			fillArray(2, {
 				type: "section",
 				label: null,
-				segments: fillArray(8, { type: "bar" }),
+				segments: fillArray(8, {
+					type: "bar",
+					content: [],
+				}),
 			}),
 		],
 		// spaces shouldn't matter
@@ -31,7 +49,10 @@ describe("parser", () => {
 			fillArray(2, {
 				type: "section",
 				label: null,
-				segments: fillArray(8, { type: "bar" }),
+				segments: fillArray(8, {
+					type: "bar",
+					content: [],
+				}),
 			}),
 		],
 		[
@@ -40,12 +61,18 @@ describe("parser", () => {
 				{
 					type: "section",
 					label: "Verse",
-					segments: fillArray(8, { type: "bar" }),
+					segments: fillArray(8, {
+						type: "bar",
+						content: [],
+					}),
 				},
 				{
 					type: "section",
 					label: "Chorus",
-					segments: fillArray(8, { type: "bar" }),
+					segments: fillArray(8, {
+						type: "bar",
+						content: [],
+					}),
 				},
 			],
 		],
@@ -55,12 +82,18 @@ describe("parser", () => {
 				{
 					type: "section",
 					label: "Verse",
-					segments: fillArray(8, { type: "bar" }),
+					segments: fillArray(8, {
+						type: "bar",
+						content: [],
+					}),
 				},
 				{
 					type: "section",
 					label: "Chorus",
-					segments: fillArray(8, { type: "bar" }),
+					segments: fillArray(8, {
+						type: "bar",
+						content: [],
+					}),
 				},
 			],
 		],
@@ -76,7 +109,10 @@ describe("parser", () => {
 				{
 					type: "section",
 					label: "Verse",
-					segments: fillArray(8, { type: "bar" }),
+					segments: fillArray(8, {
+						type: "bar",
+						content: [],
+					}),
 				},
 				{
 					type: "section",
@@ -85,22 +121,34 @@ describe("parser", () => {
 						{
 							type: "section",
 							label: "A",
-							segments: fillArray(8, { type: "bar" }),
+							segments: fillArray(8, {
+								type: "bar",
+								content: [],
+							}),
 						},
 						{
 							type: "section",
 							label: "A",
-							segments: fillArray(8, { type: "bar" }),
+							segments: fillArray(8, {
+								type: "bar",
+								content: [],
+							}),
 						},
 						{
 							type: "section",
 							label: "B",
-							segments: fillArray(8, { type: "bar" }),
+							segments: fillArray(8, {
+								type: "bar",
+								content: [],
+							}),
 						},
 						{
 							type: "section",
 							label: "A",
-							segments: fillArray(8, { type: "bar" }),
+							segments: fillArray(8, {
+								type: "bar",
+								content: [],
+							}),
 						},
 					],
 				},
@@ -109,31 +157,73 @@ describe("parser", () => {
 		[
 			`1 (right) 1 (:right) 1 (left:) 1 (:center:)`,
 			[
-				{ type: "bar" },
+				{
+					type: "bar",
+					content: [],
+				},
 				{
 					type: "note",
 					text: "right",
 					alignment: "right",
 				},
-				{ type: "bar" },
+				{
+					type: "bar",
+					content: [],
+				},
 				{
 					type: "note",
 					text: "right",
 					alignment: "right",
 				},
-				{ type: "bar" },
+				{
+					type: "bar",
+					content: [],
+				},
 				{
 					type: "note",
 					text: "left",
 					alignment: "left",
 				},
-				{ type: "bar" },
+				{
+					type: "bar",
+					content: [],
+				},
 				{
 					type: "note",
 					text: "center",
 					alignment: "center",
 				},
 			],
+		],
+		// Bars with separator
+		[
+			`"Section" [ | | | ]`,
+			[
+				{
+					type: "section",
+					label: "Section",
+					segments: fillArray(4, {
+						type: "bar",
+						content: [],
+					}),
+				},
+			],
+		],
+		// Chords
+		[
+			`C | G Am | F G Em7 Am7 | C6 - F G`,
+			[
+				["C"],
+				["G", "Am"],
+				["F", "G", "Em7", "Am7"],
+				["C6", "", "F", "G"],
+			].map((chords) => ({
+				type: "bar",
+				content: chords.map((label) => ({
+					type: "chord",
+					label,
+				})),
+			})),
 		],
 	];
 
