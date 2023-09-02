@@ -107,7 +107,7 @@ describe("parser", () => {
 			],
 		],
 		[
-			`1 (left) 1 (:left) 1 (right:) 1 (:center:)`,
+			`1 (right) 1 (:right) 1 (left:) 1 (:center:)`,
 			[
 				{ type: "bar" },
 				{

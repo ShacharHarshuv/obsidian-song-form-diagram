@@ -351,12 +351,16 @@ describe("planDiagram", () => {
 						inlineSections: [],
 						bottomNotes: [
 							{
+								type: "note",
 								text: "HC",
-								position: 4,
+								position: 5,
+								alignment: "right",
 							},
 							{
+								type: "note",
 								text: "PAC",
-								position: 8,
+								position: 9,
+								alignment: "right",
 							},
 						],
 					},
