@@ -1,11 +1,16 @@
 import * as React from "react";
 import { InlineSectionPlan } from "./planDiagram";
 
-export function InlineSection(data: InlineSectionPlan) {
+export function InlineSection(
+	data: InlineSectionPlan & {
+		style?: React.CSSProperties;
+	},
+) {
 	return (
 		<div
 			className="p-1"
 			style={{
+				...(data.style ?? {}),
 				gridColumnStart: data.start + 1,
 				gridColumnEnd: data.end + 1,
 			}}

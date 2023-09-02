@@ -24,7 +24,7 @@ export function Diagram({ source }: { source: string }) {
 		<div
 			className={classNames(
 				"flex flex-col gap-4 py-2",
-				horizontalPaddings[diagramPlan.nestingLevel],
+				horizontalPaddings[diagramPlan.paddingLevel],
 			)}
 		>
 			{diagramPlan.segments.map((segment, i) => (

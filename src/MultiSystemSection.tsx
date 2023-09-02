@@ -34,7 +34,7 @@ export function MultiSystemSection(
 			<div
 				className={classNames(
 					"-my-2 flex flex-col gap-4 rounded-xl border-2 py-2",
-					horizontalPaddings[data.nestingLevel],
+					horizontalPaddings[data.paddingLevel],
 				)}
 				style={data.nested ? {} : { borderColor: color }}
 			>

@@ -9,7 +9,7 @@ describe("planDiagram", () => {
 
 	test("one system", () => {
 		testPlanDiagram(fillArray(8, { type: "bar" }), {
-			nestingLevel: 0,
+			paddingLevel: 0,
 			segments: [
 				{
 					type: "system",
@@ -23,7 +23,7 @@ describe("planDiagram", () => {
 
 	test("two systems", () => {
 		testPlanDiagram(fillArray(16, { type: "bar" }), {
-			nestingLevel: 0,
+			paddingLevel: 0,
 			segments: fillArray(2, (lineIndex) => ({
 				type: "system",
 				fullRowLength: 8,
@@ -35,7 +35,7 @@ describe("planDiagram", () => {
 
 	test("two full systems", () => {
 		testPlanDiagram(fillArray(10, { type: "bar" }), {
-			nestingLevel: 0,
+			paddingLevel: 0,
 			segments: [
 				{
 					type: "system",
@@ -65,12 +65,12 @@ describe("planDiagram", () => {
 					...fillArray(2, { type: "bar" as const }),
 				],
 				{
-					nestingLevel: 1,
+					paddingLevel: 1,
 					segments: [
 						{
 							type: "multi-system-section",
 							label: null,
-							nestingLevel: 0,
+							paddingLevel: 0,
 							segments: [
 								{
 									type: "system",
@@ -127,12 +127,12 @@ describe("planDiagram", () => {
 					},
 				],
 				{
-					nestingLevel: 2,
+					paddingLevel: 2,
 					segments: [
 						{
 							type: "multi-system-section",
 							label: "Verse",
-							nestingLevel: 1,
+							paddingLevel: 1,
 							segments: [
 								{
 									type: "system",
@@ -145,12 +145,12 @@ describe("planDiagram", () => {
 						{
 							type: "multi-system-section",
 							label: "Chorus",
-							nestingLevel: 1,
+							paddingLevel: 1,
 							segments: ["A", "A", "B", "A"].map(
 								(label, lineIndex) => ({
 									type: "multi-system-section",
 									label,
-									nestingLevel: 0,
+									paddingLevel: 0,
 									segments: [
 										{
 											type: "system",
@@ -201,7 +201,7 @@ describe("planDiagram", () => {
 					},
 				],
 				{
-					nestingLevel: 0,
+					paddingLevel: 0,
 					segments: [
 						{
 							type: "system",
@@ -213,24 +213,28 @@ describe("planDiagram", () => {
 									label: "Basic Idea",
 									start: 0,
 									end: 2,
+									level: 0,
 								},
 								{
 									type: "inline-section",
 									label: "Rep. Basic Idea",
 									start: 2,
 									end: 4,
+									level: 0,
 								},
 								{
 									type: "inline-section",
 									label: "Development",
 									start: 4,
 									end: 6,
+									level: 0,
 								},
 								{
 									type: "inline-section",
 									label: "Cadence",
 									start: 6,
 									end: 8,
+									level: 0,
 								},
 							],
 						},
@@ -244,6 +248,63 @@ describe("planDiagram", () => {
 									label: "Cadence Rep.",
 									start: 0,
 									end: 2,
+									level: 0,
+								},
+							],
+						},
+					],
+				},
+			);
+		});
+
+		test("nested", () => {
+			testPlanDiagram(
+				[
+					{
+						type: "section",
+						label: "Antecedent",
+						segments: [
+							{
+								type: "section",
+								label: "Basic Idea",
+								segments: fillArray(2, { type: "bar" }),
+							},
+							{
+								type: "section",
+								label: "Contrasting Idea",
+								segments: fillArray(2, { type: "bar" }),
+							},
+						],
+					},
+				],
+				{
+					paddingLevel: 0,
+					segments: [
+						{
+							type: "system",
+							fullRowLength: 8,
+							bars: fillArray(4, (i) => ({ index: i })),
+							inlineSections: [
+								{
+									type: "inline-section",
+									label: "Antecedent",
+									start: 0,
+									end: 4,
+									level: 1,
+								},
+								{
+									type: "inline-section",
+									label: "Basic Idea",
+									start: 0,
+									end: 2,
+									level: 0,
+								},
+								{
+									type: "inline-section",
+									label: "Contrasting Idea",
+									start: 2,
+									end: 4,
+									level: 0,
 								},
 							],
 						},

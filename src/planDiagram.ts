@@ -18,19 +18,20 @@ export type InlineSectionPlan = {
 	label: string | null;
 	start: number;
 	end: number;
+	level: number; // 0 means closest to the system, 1 means there is a section between the system and the inline section, etc.
 };
 
 export type MultiSystemSectionPlan = {
 	type: "multi-system-section";
 	segments: SegmentPlan[];
-	nestingLevel: number;
+	paddingLevel: number;
 	label: string | null;
 };
 
 export type DiagramPlan = {
 	// the nesting level is used to determine how much padding is needed horizontally for the systems
 	// It corresponds to the deepest level of sections nesting
-	nestingLevel: number;
+	paddingLevel: number;
 	segments: SegmentPlan[];
 };
 
@@ -40,12 +41,12 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 
 	function planSegments(segments: DiagramData): {
 		segments: SegmentPlan[];
-		nestingLevel: number;
+		paddingLevel: number;
 	} {
 		const plannedSegments: DiagramPlan["segments"] = [];
 		let currentSystemBars: BarPlan[] = [];
 		let currentSystemInlineSegments: InlineSectionPlan[] = [];
-		let highestNestedSection = -1; // -1 means we didn't find any section
+		let highestNestedMultiSystemSection = -1; // -1 means we didn't find any section
 
 		function pushSystem() {
 			plannedSegments.push({
@@ -67,7 +68,11 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 			}, 0);
 		}
 
-		function processSegments(segments: Segment[]) {
+		function processSegments(segments: Segment[]): {
+			// 0 if it has no sections, 1 if it has one section, 2 it  has one section with a section inside, etc.
+			deepestNestingLevel: number;
+		} {
+			let deepestNestingLevel = 0;
 			for (const segment of segments) {
 				if (currentSystemBars.length >= barsPerLine) {
 					pushSystem();
@@ -84,20 +89,20 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 				if (segment.type === "section") {
 					const sectionLength = countBars(segment);
 
-					if (
+					const isMultiSystemSection =
 						currentSystemBars.length + sectionLength >
-							barsPerLine ||
-						sectionLength >= barsPerLine
-					) {
+							barsPerLine || sectionLength >= barsPerLine;
+
+					if (isMultiSystemSection) {
 						const plannedSection = planSegments(segment.segments);
 
 						if (currentSystemBars.length > 0) {
 							pushSystem();
 						}
 
-						highestNestedSection = Math.max(
-							highestNestedSection,
-							plannedSection.nestingLevel,
+						highestNestedMultiSystemSection = Math.max(
+							highestNestedMultiSystemSection,
+							plannedSection.paddingLevel,
 						);
 
 						plannedSegments.push({
@@ -105,17 +110,37 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 							...plannedSection,
 							label: segment.label,
 						});
+
+						deepestNestingLevel = Math.max(
+							deepestNestingLevel,
+							plannedSection.paddingLevel + 1,
+						);
 					} else {
-						currentSystemInlineSegments.push({
+						const inlineSection: InlineSectionPlan = {
 							type: "inline-section",
 							label: segment.label,
 							start: currentSystemBars.length,
 							end: currentSystemBars.length + sectionLength,
-						});
-						processSegments(segment.segments);
+							level: 0,
+						};
+						currentSystemInlineSegments.push(inlineSection);
+						const {
+							deepestNestingLevel:
+								deepestNestingLevelForInnerSegments,
+						} = processSegments(segment.segments);
+						inlineSection.level +=
+							deepestNestingLevelForInnerSegments;
+						deepestNestingLevel = Math.max(
+							deepestNestingLevel,
+							inlineSection.level + 1,
+						);
 					}
 				}
 			}
+
+			return {
+				deepestNestingLevel,
+			};
 		}
 
 		processSegments(segments);
@@ -126,12 +151,12 @@ export function planDiagram(diagramData: DiagramData): DiagramPlan {
 
 		plannedSegments.forEach((segment) => {
 			segment.type === "multi-system-section" &&
-				(segment.nestingLevel = highestNestedSection);
+				(segment.paddingLevel = highestNestedMultiSystemSection);
 		});
 
 		return {
 			segments: plannedSegments,
-			nestingLevel: highestNestedSection + 1,
+			paddingLevel: highestNestedMultiSystemSection + 1,
 		};
 	}
 
