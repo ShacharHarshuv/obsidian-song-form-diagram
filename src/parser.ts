@@ -34,16 +34,14 @@ chords
   
 chord
   = "-" {return { type: "chord", label: "" } }
-  / label:[^ |\\[\\]]+ { return { type: "chord", label: label.join("") } }
+  / label:[^ |\\[\\]"]+ { return { type: "chord", label: label.join("") } }
 
 barNumber
   = value:integer { return Array(value).fill({ type: "bar", content: [] }); }
 
 string
-  = '"' chars:char+ '"' { return chars.join(""); }
-  
-char
-  = [^"]
+  = '"' text:[^"]+ '"' { return text.join(""); }
+  / text:(!([0-9 "]) _text:[^ "\\[]+ { return _text.join("")}) { return text; }
 
 integer
   = digits:[0-9]+ { return parseInt(digits.join(""), 10); }
