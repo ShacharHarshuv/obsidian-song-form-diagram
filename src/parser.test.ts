@@ -1,4 +1,4 @@
-import { DiagramData } from "./DiagramData";
+import { Bar, Chord, DiagramData } from "./DiagramData";
 import { fillArray } from "./fillArray";
 import { parseSource } from "./parser";
 
@@ -8,23 +8,11 @@ describe("parser", () => {
 	});
 
 	test("bar number", () => {
-		testParser(
-			"8",
-			fillArray(8, {
-				type: "bar",
-				content: [],
-			}),
-		);
+		testParser("8", fillArray(8, bar()));
 	});
 
 	test("multiple bar numbers", () => {
-		testParser(
-			"8 8",
-			fillArray(16, {
-				type: "bar",
-				content: [],
-			}),
-		);
+		testParser("8 8", fillArray(16, bar()));
 	});
 
 	test("section", () => {
@@ -32,10 +20,7 @@ describe("parser", () => {
 			{
 				type: "section",
 				label: null,
-				segments: fillArray(8, {
-					type: "bar",
-					content: [],
-				}),
+				segments: fillArray(8, bar()),
 			},
 		]);
 	});
@@ -44,10 +29,7 @@ describe("parser", () => {
 		const expected: DiagramData = fillArray(2, {
 			type: "section",
 			label: null,
-			segments: fillArray(8, {
-				type: "bar",
-				content: [],
-			}),
+			segments: fillArray(8, bar()),
 		});
 
 		test("without spaces", () => {
@@ -64,18 +46,12 @@ describe("parser", () => {
 			{
 				type: "section",
 				label: "Verse",
-				segments: fillArray(8, {
-					type: "bar",
-					content: [],
-				}),
+				segments: fillArray(8, bar()),
 			},
 			{
 				type: "section",
 				label: "Chorus",
-				segments: fillArray(8, {
-					type: "bar",
-					content: [],
-				}),
+				segments: fillArray(8, bar()),
 			},
 		];
 
@@ -95,20 +71,17 @@ describe("parser", () => {
 	describe("nested sections", () => {
 		testParser(
 			`"Verse" 8
-      "Chorus" [
-        "A" 8
-        "A" 8
-        "B" 8
-        "A" 8
-      ]`,
+	    "Chorus" [
+	      "A" 8
+	      "A" 8
+	      "B" 8
+	      "A" 8
+	    ]`,
 			[
 				{
 					type: "section",
 					label: "Verse",
-					segments: fillArray(8, {
-						type: "bar",
-						content: [],
-					}),
+					segments: fillArray(8, bar()),
 				},
 				{
 					type: "section",
@@ -117,10 +90,7 @@ describe("parser", () => {
 						{
 							type: "section",
 							label: "A",
-							segments: fillArray(8, {
-								type: "bar",
-								content: [],
-							}),
+							segments: fillArray(8, bar()),
 						},
 						{
 							type: "section",
@@ -133,18 +103,12 @@ describe("parser", () => {
 						{
 							type: "section",
 							label: "B",
-							segments: fillArray(8, {
-								type: "bar",
-								content: [],
-							}),
+							segments: fillArray(8, bar()),
 						},
 						{
 							type: "section",
 							label: "A",
-							segments: fillArray(8, {
-								type: "bar",
-								content: [],
-							}),
+							segments: fillArray(8, bar()),
 						},
 					],
 				},
@@ -154,37 +118,25 @@ describe("parser", () => {
 
 	test("bottom notes", () => {
 		testParser(`1 (right) 1 (:right) 1 (left:) 1 (:center:)`, [
-			{
-				type: "bar",
-				content: [],
-			},
+			bar(),
 			{
 				type: "note",
 				text: "right",
 				alignment: "right",
 			},
-			{
-				type: "bar",
-				content: [],
-			},
+			bar(),
 			{
 				type: "note",
 				text: "right",
 				alignment: "right",
 			},
-			{
-				type: "bar",
-				content: [],
-			},
+			bar(),
 			{
 				type: "note",
 				text: "left",
 				alignment: "left",
 			},
-			{
-				type: "bar",
-				content: [],
-			},
+			bar(),
 			{
 				type: "note",
 				text: "center",
@@ -198,86 +150,99 @@ describe("parser", () => {
 			{
 				type: "section",
 				label: "Section",
-				segments: fillArray(4, {
-					type: "bar",
-					content: [],
-				}),
+				segments: fillArray(4, bar()),
 			},
 		]);
 	});
 
 	describe("chords", () => {
-		test("chords", () => {
-			testParser(
-				`C | G Am | F G Em7 Am7 | C6 - F G`,
-				[
-					["C"],
-					["G", "Am"],
-					["F", "G", "Em7", "Am7"],
-					["C6", "", "F", "G"],
-				].map((chords) => ({
-					type: "bar",
-					content: chords.map((label) => ({
-						type: "chord",
-						label,
-					})),
-				})),
-			);
+		test("single chord", () => {
+			testParser(`C`, [bar("C")]);
 		});
 
-		test("chords with named sections", () => {
-			testParser(`C | G Am "section" [F | G]`, [
-				{
-					type: "bar",
-					content: [
-						{
-							type: "chord",
-							label: "C",
-						},
-					],
-				},
-				{
-					type: "bar",
-					content: [
-						{
-							type: "chord",
-							label: "G",
-						},
-						{
-							type: "chord",
-							label: "Am",
-						},
-					],
-				},
-				{
-					type: "section",
-					label: "section",
-					segments: [
-						{
-							type: "bar",
-							content: [
-								{
-									type: "chord",
-									label: "F",
-								},
-							],
-						},
-						{
-							type: "bar",
-							content: [
-								{
-									type: "chord",
-									label: "G",
-								},
-							],
-						},
-					],
-				},
+		test("chords", () => {
+			testParser(`C | G Am | F G Em7 Am7 | C6 - F G`, [
+				bar(["C"]),
+				bar(["G", "Am"]),
+				bar(["F", "G", "Em7", "Am7"]),
+				bar(["C6", "", "F", "G"]),
+			]);
+		});
+
+		test("chords in quotes", () => {
+			testParser(`"V ->" | "(ii" "V)->" | V | I`, [
+				bar(["V ->"]),
+				bar(["(ii", "V)->"]),
+				bar(["V"]),
+				bar(["I"]),
+			]);
+		});
+
+		/**
+		 * todo: this is currently not supported due to ambiguity
+		 * Consider introducing parenthesis to solve this
+		 * */
+		// test("chords with named sections", () => {
+		// 	testParser(`C | G Am "section" [F | G]`, [
+		// 		bar(["C"]),
+		// 		bar(["G", "Am"]),
+		// 		{
+		// 			type: "section",
+		// 			label: "section",
+		// 			segments: [bar(["F"]), bar(["G"])],
+		// 		},
+		// 	]);
+		// });
+	});
+
+	describe("numbers and bar separators", () => {
+		test("bar separator + number", () => {
+			testParser(`| 2`, fillArray(3, bar()));
+		});
+
+		test("chord | number", () => {
+			testParser(`C | 2`, [bar(["C"]), ...fillArray(2, bar())]);
+		});
+
+		test("number | chord", () => {
+			testParser(`2 | C`, [...fillArray(2, bar()), bar(["C"])]);
+		});
+
+		test("number chord number", () => {
+			testParser(`2 C 2`, [
+				...fillArray(2, bar()),
+				bar(["C"]),
+				...fillArray(2, bar()),
+			]);
+		});
+
+		test("number | chord | number", () => {
+			testParser(`2 | C | 2`, [
+				...fillArray(2, bar()),
+				bar(["C"]),
+				...fillArray(2, bar()),
 			]);
 		});
 	});
 
 	function testParser(source: string, expected: DiagramData) {
 		expect(parseSource(source)).toEqual(expected);
+	}
+
+	function chord(label: string): Chord {
+		return {
+			type: "chord",
+			label,
+		};
+	}
+
+	function bar(content: string | string[] = []): Bar {
+		return {
+			type: "bar",
+			content:
+				typeof content === "string"
+					? [chord(content)]
+					: content.map(chord),
+		};
 	}
 });
