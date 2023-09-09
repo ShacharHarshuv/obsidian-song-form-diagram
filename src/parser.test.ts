@@ -197,30 +197,33 @@ describe("parser", () => {
 
 	describe("numbers and bar separators", () => {
 		test("bar separator + number", () => {
-			testParser(`| 2`, fillArray(3, bar()));
+			testParser(`| 2`, fillArray(4, bar()));
 		});
 
 		test("chord | number", () => {
-			testParser(`C | 2`, [bar(["C"]), ...fillArray(2, bar())]);
+			testParser(`C | 2`, [bar(["C"]), ...fillArray(3, bar())]);
 		});
 
 		test("number | chord", () => {
-			testParser(`2 | C`, [...fillArray(2, bar()), bar(["C"])]);
+			testParser(`2 | C`, [...fillArray(3, bar()), bar(["C"])]);
 		});
 
 		test("number chord number", () => {
 			testParser(`2 C 2`, [
 				...fillArray(2, bar()),
-				bar(["C"]),
-				...fillArray(2, bar()),
+				{
+					type: "section",
+					label: "C",
+					segments: fillArray(2, bar()),
+				},
 			]);
 		});
 
 		test("number | chord | number", () => {
 			testParser(`2 | C | 2`, [
-				...fillArray(2, bar()),
+				...fillArray(3, bar()),
 				bar(["C"]),
-				...fillArray(2, bar()),
+				...fillArray(3, bar()),
 			]);
 		});
 	});

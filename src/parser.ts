@@ -26,20 +26,23 @@ start
 segments
   = segment:segment ws segments:segments { return log('space separated segment', [segment, ...segments]) }
   / segment:segment { return log('segment', [segment]) }
-  // Not allowing bars + segments to avoid the issue of "A | B [1]" being ambivalent
+  / bars:barNumber ws segments:segments { return [...bars, ...segments] }
+  / barNumber
+  // Not allowing mixing bars annotation and segments as it's too confusing
+  / bars:bars ws? rest:barNumber { return [...bars, ...rest] }
   / bars:bars { return log('bars', bars) }
-  / bars:barNumber ws segments:segments { return log('barNumber + segments', [...bars, ...segments]) }
+  
 
 segment
   = section
-  / note // should this be here, or inside a bar?
+  / note
 
 ws = [ \\t\\n\\r]+
 
+// not including bar number
 bars
-  = bars1:barNumber ws? "|" ws? bars2:barLineRightSide { return log('| separated barNumber', [...bars1, ...bars2]) }
+  = bars:barNumber ws rest:bars { return [...bars, ...rest] }
   / bar:bar ws? "|" ws? bars:barLineRightSide { return log('| separated bar', [bar, ...bars]) }
-  / barNumber:barNumber { return log('barNumber', barNumber) }
   / bar:barWithChords { return log('barWithChords', [bar]) }
 
 bar
@@ -67,6 +70,7 @@ chords
 chord
   = "-" {return { type: "chord", label: "" } }
   / label:string { return { type: "chord", label: label } }
+
 
 barNumber
   = value:integer { return Array(value).fill({ ...bar(), ...nodeInfo(location()) }); }
