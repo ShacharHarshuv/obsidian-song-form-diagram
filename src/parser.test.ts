@@ -145,6 +145,49 @@ describe("parser", () => {
 		]);
 	});
 
+	test("notes with sections", () => {
+		testParser(`Chorus 8 (note)`, [
+			{
+				type: "section",
+				label: "Chorus",
+				segments: fillArray(8, bar()),
+			},
+			{
+				type: "note",
+				text: "note",
+				alignment: "right",
+			},
+		]);
+	});
+
+	test("notes in nested sections", () => {
+		testParser(`"Chorus" [ "A" 8 (note) ]`, [
+			{
+				type: "section",
+				label: "Chorus",
+				segments: [
+					{
+						type: "section",
+						label: "A",
+						segments: fillArray(8, bar()),
+					},
+					{
+						type: "note",
+						text: "note",
+						alignment: "right",
+					},
+				],
+			},
+		]);
+	});
+
+	test("test", () => {
+		testParser(
+			`"Chorus" ["A (Sentence)" ["b.i." 2 (HC:) "continuation" 2 "cadence" 2]`,
+			[],
+		);
+	});
+
 	test("bars with separators", () => {
 		testParser(`"Section" [ | | | ]`, [
 			{
